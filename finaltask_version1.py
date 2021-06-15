@@ -314,3 +314,8 @@ core.quit()
 data_out = open(f_name, 'a', encoding='utf-8')
 data_out.write( '\t'.join( [ "subject_id", "condition", "trial_number", "stimulus_shown", "response_key", "rt_start", "correct", "win-stay", "lose-shift", "isi", "date_in_ms" ] ) + "\n" )
 data_out.write( '\t'.join( [ subj_id, str(condition), str(trial_num+1), resp_key, str(rt_start), str(correct), str(win_stay), str(lose_shift), str(isi), str(strftime("%Y%m%d%H%M%S", gmtime())) ] ) + '\n' )
+
+# GL:
+# the level of complexity is quite okay, but probably could be more concisely/better written
+# e.g. addition to list seems unnecessary for counting, could just be a single integer
+# store each trial separately!
