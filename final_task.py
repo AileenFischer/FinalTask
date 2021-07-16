@@ -1,8 +1,37 @@
 import random
 import psychopy.visual
-from psychopy.core import wait
+from psychopy.core import wait, Clock
 from psychopy import core, event
+from psychopy.gui import DlgFromDict
 event.globalKeys.add(key='q', modifiers=['ctrl'], func=core.quit)
+
+# creating file for experiment
+data_out = open('final_project.txt', 'a', encoding='utf-8')
+data_out.write( '\t'.join( [ "participant_id", "participant_age", "participant_gender", "condition", "trial_number", "stimulus", "response_key", "feedback" ] ) + "\n" )
+data_out.write( '\t'.join( [ part_id, str(part_age), str(part_gender), str(condition), str(trials+1), str(stimulus), str(choice), str(feedback) ] ) + '\n' )
+
+# Participant information
+part_info = {'ID: ': ' ', 'Age: ': ' ', 'Gender: ': ['female', 'male', 'non-binary', 'other']}
+part_instr = DlgFromDict(dictionary = part_info, title = "Participant information",
+                                            order = ['ID: ', 'Age: ', 'Gender: '], tip = {'ID: ': 'This informatin is to be filled out by the experimenter', 
+                                            'Age: ' : 'Please enter your age in years', 'Gender: ' : 'Please select your gender'})
+if part_instr.OK:
+    # prevent missing input in ID field
+    while not part_info['ID: ']:
+        part_instr.show()
+        if part_instr.OK == False:
+            quit()
+    # prevent missing input in age field
+    while not part_info['Age: ']:
+        part_instr.OK == False:
+            quit()
+    # define participant information
+    part_id == part_info['ID: ']
+    part_age == part_info['Age :']
+    part_gender == part_info['Gender: ']
+
+else:
+    quit()
 
 win = psychopy.visual.Window(
             size = [1000, 800],
@@ -51,271 +80,278 @@ green_red_rect = psychopy.visual.Rect(
 )
 green_red_rect.pos = [220, 0]
 
+orange_tri = psychopy.visual.Polygon(
+            win = win,
+            units = "pix",
+            radius = 200,
+            edges = 3,
+            fillColor=["orange"],
+)
+orange_tri.pos = [-220, 0]
 
-welcome_text_social = psychopy.visual.TextStim(win, text = "Welcome to this experiment! \n"
-                                      "This experiment aims to better understand how people use direct and indirect information to learn \n"
-                                      "In the following, you will be presented with two rectangles, a green one and a blue one. \n"
-                                      "You choose between the two rectangles by pressing the 'left' or 'right' keys on the keyboard.  \n"
-                                      "After you have made your choice, you will see whether it was right or wrong.  \n"
-                                      "You will be granted 10 points for every correct choice and 0 points for every incorrect choice.\n"
-                                      "There will also appear a red border around either of the rectangles.\n"
-                                      "This border indicates the choices previous participants have made.  \n"
-                                      "This information can be pretty useful or less useful, depending on the experience of the participants. \n"
-                                      "The experiments consists of 6 rounds.\n"
-                                      "To win the gold prize, get at least 50 points.\n"
-                                      "To win the silver prize, get at least 40 points.\n"
-                                      "If you have understood the instructions, press any key to continue.",
-                                      color = "black")
+orange_green_tri= psychopy.visual.Polygon(
+            win = win,
+            units = "pix",
+            radius = 200,
+            edges = 3,
+            fillColor=["orange"],
+            lineColor=["green"],
+            lineWidth = 5
+)
 
-welcome_text_nonsocial = psychopy.visual.TextStim(win, text = "Welcome to this experiment! \n"
+orange_green_tri.pos = [-220, 0]
+
+purple_tri = psychopy.visual.Polygon(
+            win = win,
+            units = "pix",
+            radius = 200,
+            edges = 3,
+            fillColor=["purple"],
+)
+purple_tri.pos = [220, 0]
+
+purple_green_tri = psychopy.visual.Polygon(
+            win = win,
+            units = "pix", 
+            radius = 200,
+            edges = 3,
+            fillColor=["purple"],
+            lineColor=["green"],
+            lineWidth = 5
+)
+
+purple_green_tri.pos = [220, 0]
+
+# welcome texts
+welcome_text_social_1 = psychopy.visual.TextStim(win, text = "Welcome to this experiment! \n\n"
+                                      "This experiment aims to better understand how people \n"
+                                      "use direct and indirect information to learn. \n\n"
+                                      "In the following, you will be presented with two rectangles, a green one and a blue one.  \n\n"
+                                      "You choose between the two rectangles by pressing the 'k' for right \n"
+                                      "and 'd' for left on the keyboard. \nn"
+                                      "To help you decide, one of the rectangles will be highlighted by a red border. \n\n"
+                                      "This border indicates the choices previous participants have made. \n"
+                                      "This information can be pretty useful or less useful, depending on the experience of the participants. \n\n"
+                                      "After you have made your choice, you will see whether it was right or wrong. \n\n"
+                                      "You will be granted 10 points for every correct choice and 0 points for every incorrect choice. \n\n"
+                                      "The experiments consists of 6 rounds. \n"
+                                      "To win the gold prize, get at least 50 points. \n"
+                                      "To win the silver prize, get at least 40 points. \n\n"
+                                      "If you have understood the instructions, press space to continue.",
+                                       color = "black")
+
+welcome_text_social_2 = psychopy.visual.TextStim(win, text = "Welcome to this experiment! \n\n"
+                                      "This experiment aims to better understand how people \n"
+                                      "use direct and indirect information to learn. \n\n"
+                                      "In the following, you will be presented with two triangles, an orange one and a purple one. \n\n"
+                                      "You choose between the two triangles by pressing the 'k' for right \n"
+                                      "and 'd' for left on the keyboard.\n\n"
+                                      "To help you decide, one of the triangles will be highlighted by a green border. \n\n"
+                                      "This border indicates the choices previous participants have made. \n"
+                                      "This information can be pretty useful or less useful, depending on the experience of the participants. \n\n"
+                                      "After you have made your choice, you will see whether it was right or wrong. \n\n"
+                                      "You will be granted 10 points for every correct choice and 0 points for every incorrect choice.\n\n"
+                                      "The experiments consists of 6 rounds. \n"
+                                      "To win the gold prize, get at least 50 points. \n"
+                                      "To win the silver prize, get at least 40 points. \n\n"
+                                      "If you have understood the instructions, press space to continue.",
+                                       color = "black")
+
+welcome_text_nonsocial_1 = psychopy.visual.TextStim(win, text = "Welcome to this experiment! \n\n"
                                               "This experiment aims to better understand how people \n"
-                                              "use direct and indirect information to learn. \n"
-                                              "In the following, you will be presented with two rectangles, a green one and a blue one. \n"
-                                              "You choose between the two rectangles by pressing the 'k' for right\n"
-                                              "and 'd' for left on the keyboard. \n"
-                                              "To help you decide, one of the rectangles will be highlighted. \n"
+                                              "use direct and indirect information to learn. \n\n"
+                                              "In the following, you will be presented with two rectangles, a green one and a blue one. \n\n"
+                                              "You choose between the two rectangles by pressing the 'k' for right \n"
+                                              "and 'd' for left on the keyboard. \n\n"
+                                              "To help you decide, one of the rectangles will be highlighted by a red border. \n\n"
                                               "This choice is made by a rigged roulette wheel,  \n"
-                                              "which means that this information can be pretty useful or less useful. \n"
-                                              "After you have made your choice, you will see whether it was right or wrong.  \n"
+                                              "which means that this information can be pretty useful or less useful. \n\n"
+                                              "After you have made your choice, you will see whether it was right or wrong.  \n\n"
                                               "You will be granted 10 points for every correct choice \n"
-                                              "and 0 points for every incorrect choice.\n"
+                                              "and 0 points for every incorrect choice.\n\n"
                                               "The experiments consists of 6 rounds.\n"
                                               "To win the gold prize, get at least 50 points.\n"
-                                              "If you have understood the instructions, press any key to continue.",
-                                              color = "black")
+                                              "If you have understood the instructions, press space to continue.",
+                                               color = "black")
+
+welcome_text_nonsocial_2 = psychopy.visual.TextStim(win, text = "Welcome to this experiment! \n\n"
+                                              "This experiment aims to better understand how people \n"
+                                              "use direct and indirect information to learn. \n\n"
+                                              "In the following, you will be presented with two triangles, an orange one and a purple one. \n\n"
+                                              "You choose between the two triangles by pressing the 'k' for right \n"
+                                              "and 'd' for left on the keyboard. \n\n"
+                                              "To help you decide, one of the triangles will be highlighted. by a green border \n\n"
+                                              "This choice is made by a rigged roulette wheel,  \n"
+                                              "which means that this information can be pretty useful or less useful. \n\n"
+                                              "After you have made your choice, you will see whether it was right or wrong. \n\n"
+                                              "You will be granted 10 points for every correct choice \n"
+                                              "and 0 points for every incorrect choice. \n\n"
+                                              "The experiments consists of 6 rounds. \n"
+                                              "To win the gold prize, get at least 50 points. \n"
+                                              "If you have understood the instructions, press space to continue.",
+                                               color = "black")
+
 # randomization of groups
-groups = ["social", "nonsocial"]
+groups = ["social_1", "social_2", "nonsocial_1", "nonsocial_2"]
 randomization = random.choice(groups)
-if randomization == "social":
-    welcome_text_social.draw()
+if randomization == "social_1":
+    welcome_text_social_1.draw()
     win.flip()
-    event.waitKeys()
+    event.waitKeys(keyList = ['space'])
+elif randomization == "social_2":
+    welcome_text_social_2.draw()
+    win.flip()
+    event.waitKeys(keyList = ['space'])
+elif randomization == "nonsocial_1":
+    welcome_text_nonsocial_1.draw()
+    win.flip()
+    event.waitKeys(keyList = ['space'])
 else:
-    welcome_text_social.draw()
+    welcome_text_nonsocial_2.draw()
     win.flip()
-    event.waitKeys()
+    event.waitKeys(keyList = ['space'])
 
-sum_choices = []
-sum_feedback = []
-score = []
+print("condition: the participant is in the ", randomization, " group.")
+
+score = 0
 trials = 0
+timer = Clock()
 
-choice = psychopy.visual.TextStim(win, text = "Please press 'd' for the left rectangle and 'k' for the right rectangle", color = "black", height = 25)
-choice.pos = [0, -160]
+instruction = psychopy.visual.TextStim(win,
+                text = "Please press 'd' for left and 'k' for right.",  
+                color = "black", 
+                height = 25)
+instruction.pos = [0, -160]
 
 while trials <= 5:
     # randomization of stimuli
     stimuli= ["1", "2"]
     stimulus = random.choice(stimuli)
-    if stimulus == "1":
+    if randomization == "social_1" and stimulus == "1" or  randomization == "nonsocial_1" and stimulus == "1":
         blue_rect.draw()
         green_red_rect.draw()
-        # participants make their choice
-        choice.draw()
+        instruction.draw()
         win.flip()
-        event.waitKeys()
-        wait(5)
-    else:
+        print("stimuli: blue_rect + green_red_rect.")
+        # participants make their choice
+        choice = event.waitKeys(keyList = ['d', 'k'], timeStamped = timer)
+        print("choice and response time: ", choice)
+        timer.reset()
+    elif randomization == "social_1" and stimulus == "2" or randomization == "nonsocial_1" and stimulus == "2":
         blue_red_rect.draw()
         green_rect.draw()
+        instruction.draw()
+        win.flip()
+        print("stimuli: blue_red_rect + green_rect.")
         # participants make their choice
-        choice.draw()
+        choice = event.waitKeys(keyList = ['d', 'k'], timeStamped = timer)
+        print("choice and response time: ", choice)
+        timer.reset()
+    elif randomization == "social_2" and stimulus == "1" or randomization == "nonsocial_2" and stimulus == "1": 
+        orange_tri.draw()
+        purple_green_tri.draw()
+        instruction.draw()
         win.flip()
-        event.waitKeys()
-        win.flip()
-        wait(5)
-
-    if choice == "k" or "d":
-        #feedback is given
-        feedback = ["correct!", "incorrect!"]
-        random_feedback =  psychopy.visual.TextStim(win, text = random.choice(feedback), color = "black", height = 30)
-        random_feedback.draw()
-        win.flip()
-        wait(2)
-        
-        # answers are stored
-        if choice == "k":
-            sum_choices.append("k")
-        else:
-            sum_choices.append("d")
-        
-        # score and feedback is stored
-        if random_feedback == "correct!":
-            score.append(10)
-            sum_feedback.append("correct!")
-        else:
-            score.append(0)
-            sum_feedback.append("incorrect!")
-
-        trials += 1
-        sum_score = sum(score)
-
+        print("stimuli: orange_tri + purple_green_tri.")
+        # participants make their choice
+        choice = event.waitKeys(keyList = ['d', 'k'], timeStamped = timer)
+        print("choice and response time: ", choice)
+        timer.reset()
     else:
-        not_valid = psychopy.visual.TextStim(window, text = "The input is not valid. Please enter 'k' or 'd'.", color = "black")
-        not_valid.draw()
+        orange_green_tri.draw()
+        purple_tri.draw()
+        instruction.draw()
+        win.flip()
+        print("stimuli: orange_green_triangle + purple_tri.")
+        # participants make their choice
+        choice = event.waitKeys(keyList = ['d', 'k'], timeStamped = timer)
+        print("choice and response time: ", choice)
+        timer.reset()
 
-# participant feedback is given
+    # feedback is given
+    feedback = ["correct!", "incorrect!"]
+    random_feedback =  psychopy.visual.TextStim(win,
+                                        text = random.choice(feedback),
+                                        color = "black",
+                                        height = 30)                            
+    random_feedback.draw()
+    win.flip()
+    wait(2)
+        
+    # score is stored and feedback is printed
+    if random_feedback.text == "correct!":
+        score += 10
+        print("feedback: correct")
+        print("score: ", score)
+    else:
+        score += 0
+        print("feedback: incorrect")        
+        print("score: ", score)
 
-if sum_score >= 50:
-      gold_prize = psychopy.visual.TextStim(win, text = "Congratulations! You win the gold prize!", color = "black", height = 30)
+    trials += 1
+    print("trial: ", trials)
+
+    # win-stay, lose-shift
+#    if trials > 1:
+#        if 'k' in choice:
+#            if random_feedback.text == "correct!":
+#                if trials + 1 and 'k' in choice:
+#                    print("win-stay")
+#                else:
+#                    print("other")
+#            else:
+#                if trials + 1 and 'k' in choices:
+#                    print("other")
+#                else:
+#                    print("lose-shift")
+#       else:
+#            if random_feedback.text == "correct!":
+#                if trials + 1 and 'd' in choice:
+#                   print("win-stay")
+#                else:
+#                    print("other")
+#            else:
+#                if trials + 1 and 'd' in choice:
+#                    print("other")
+#                else:
+#                    print("lose-shift") 
+
+                    
+# overall feedback is given
+
+if score >= 50:
+      gold_prize = psychopy.visual.TextStim(win,
+                            text = "Congratulations! You win the gold prize!", 
+                            color = "black", 
+                            height = 30)
       gold_prize.draw()
       win.flip()
       wait(3)
-elif sum_score == 40:
-        silver_prize = psychopy.visual.TextStim(win, text = "Congratulations! You win the silver prize!", color = "black", height = 30)
+elif score == 40:
+        silver_prize = psychopy.visual.TextStim(win,
+                                text = "Congratulations! You win the silver prize!", 
+                                color = "black",
+                                height = 30)
         silver_prize.draw()
         win.flip()
         wait(3)
 else:
-        no_prize = psychopy.visual.TextStim(win, text = "You win no prize.", color = "black", height = 30)
+        no_prize = psychopy.visual.TextStim(win,
+                            text = "You win no prize.",
+                            color = "black",
+                            height = 30)
         no_prize.draw()
         win.flip()
         wait(3)
 
 #end
-end_screen = psychopy.visual.TextStim(win, text = "Thank you for participating in this experiment! ", color = "black", height = 30)
+end_screen = psychopy.visual.TextStim(win,
+                        text = "Thank you for participating in this experiment! ",
+                        color = "black",
+                        height = 30)
 end_screen.draw()
 win.flip()
 wait(5)
 
-# win-stay lose-shift
-win_stay = []
-lose_shift = []
-other = []
-
-if sum_choices[0] == "k":
-    if sum_feedback[0] == "correct!":
-        if sum_choices[1] == "k":   # win-stay (k - correct - k)
-            win_stay.append(1)
-        else:
-            other.append(1)    # neither win-stay nor lose-shift (k - correct - d)
-    else:
-        if sum_choices[1] == "k":
-            other.append(1)    # neither win-stay nor lose-shift (k - incorrect - k)
-        else:
-            lose_shift.append(1)    # lose shift (k - incorrect - d)
-else:
-    if sum_feedback[0] == "correct!":
-        if sum_choices[1] == "d":   # win-stay (d - correct - d)
-            win_stay.append(1)
-        else:
-            other.append(1)    # neither win-stay nor lose-shift (d - correct - k)
-    else:
-        if sum_choices[1] == "d":
-            other.append(1)    # neither win-stay nor lose-shift (d - incorrect - d)
-        else:
-            lose_shift.append(1)    # lose shift (d - incorrect - k)
-
-if sum_choices[1] == "k":
-    if sum_feedback[1] == "correct!":
-        if sum_choices[2] == "k":   # win-stay (k - correct - k)
-            win_stay.append(1)
-        else:
-            other.append(1)    # neither win-stay nor lose-shift (k - correct - d)
-    else:
-        if sum_choices[2] == "k":
-            other.append(1)    # neither win-stay nor lose-shift (k - incorrect - k)
-        else:
-            lose_shift.append(1)    # lose shift (k - incorrect - d)
-else:
-    if sum_feedback[1] == "correct!":
-        if sum_choices[2] == "d":   # win-stay (d - correct - d)
-            win_stay.append(1)
-        else:
-            other.append(1)    # neither win-stay nor lose-shift (d - correct - k)
-    else:
-        if sum_choices[2] == "d":
-            other.append(1)    # neither win-stay nor lose-shift (d - incorrect - d)
-        else:
-            lose_shift.append(1)    # lose shift (d - incorrect - k)
-
-if sum_choices[2] == "k":
-    if sum_feedback[2] == "correct!":
-        if sum_choices[3] == "k":   # win-stay (k - correct - k)
-            win_stay.append(1)
-        else:
-            other.append(1)    # neither win-stay nor lose-shift (k - correct - d)
-    else:
-        if sum_choices[3] == "k":
-            other.append(1)    # neither win-stay nor lose-shift (k - incorrect - k)
-        else:
-            lose_shift.append(1)    # lose shift (k - incorrect - d)
-else:
-    if sum_feedback[2] == "correct!":
-        if sum_choices[3] == "d":   # win-stay (d - correct - d)
-            win_stay.append(1)
-        else:
-            other.append(1)    # neither win-stay nor lose-shift (d - correct - k)
-    else:
-        if sum_choices[3] == "d":
-            other.append(1)    # neither win-stay nor lose-shift (d - incorrect - d)
-        else:
-            lose_shift.append(1)    # lose shift (d - incorrect - k)
-
-if sum_choices[3] == "k":
-    if sum_feedback[3] == "correct!":
-        if sum_choices[4] == "k":   # win-stay (k - correct - k)
-            win_stay.append(1)
-        else:
-            other.append(1)    # neither win-stay nor lose-shift (k - correct - d)
-    else:
-        if sum_choices[4] == "k":
-            other.append(1)    # neither win-stay nor lose-shift (k - incorrect - k)
-        else:
-            lose_shift.append(1)    # lose shift (k - incorrect - d)
-else:
-    if sum_feedback[3] == "correct!":
-        if sum_choices[4] == "d":   # win-stay (d - correct - d)
-            win_stay.append(1)
-        else:
-            other.append(1)    # neither win-stay nor lose-shift (d - correct - k)
-    else:
-        if sum_choices[4] == "d":
-            other.append(1)    # neither win-stay nor lose-shift (d - incorrect - d)
-        else:
-            lose_shift.append(1)    # lose shift (d - incorrect - k)
-
-if sum_choices[4] == "k":
-    if sum_feedback[4] == "correct!":
-        if sum_choices[5] == "k":   # win-stay (k - correct - k)
-            win_stay.append(1)
-        else:
-            other.append(1)    # neither win-stay nor lose-shift (k - correct - d)
-    else:
-        if sum_choices[5] == "k":
-            other.append(1)    # neither win-stay nor lose-shift (k - incorrect - k)
-        else:
-            lose_shift.append(1)    # lose shift (k - incorrect - d)
-else:
-    if sum_feedback[4] == "correct!":
-        if sum_choices[5] == "d":   # win-stay (d - correct - d)
-            win_stay.append(1)
-        else:
-            other.append(1)    # neither win-stay nor lose-shift (d - correct - k)
-    else:
-        if sum_choices[5] == "d":
-            other.append(1)    # neither win-stay nor lose-shift (d - incorrect - d)
-        else:
-            lose_shift.append(1)    # lose shift (d - incorrect - k)
-
-
-# Output
-print("The participant was in the ", randomization, " group.")
-print("The participant has made the following choices: ", sum_choices)
-print("This is the feedback the particpant has gotten: ", sum_feedback)
-print("The participant showed win-stay behavior on ", sum(win_stay), " occasions.")
-print("The participant showed lose-shift behavior on ", sum(lose_shift), " occasions.")
-print("The participant showed neither win-stay or lose-shift behavior on ", sum(other), " occasions.")
-
 win.close()
 core.quit()
-
-# creating file for experiment
-data_out = open(f_name, 'a', encoding='utf-8')
-data_out.write( '\t'.join( [ "subject_id", "condition", "trial_number", "stimulus_shown", "response_key", "rt_start", "correct", "win-stay", "lose-shift", "isi", "date_in_ms" ] ) + "\n" )
-data_out.write( '\t'.join( [ subj_id, str(condition), str(trial_num+1), resp_key, str(rt_start), str(correct), str(win_stay), str(lose_shift), str(isi), str(strftime("%Y%m%d%H%M%S", gmtime())) ] ) + '\n' )
-
-# GL:
-# the level of complexity is quite okay, but probably could be more concisely/better written
-# e.g. addition to list seems unnecessary for counting, could just be a single integer
-# store each trial separately!
