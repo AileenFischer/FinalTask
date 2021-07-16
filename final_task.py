@@ -211,7 +211,7 @@ else:
     win.flip()
     event.waitKeys(keyList = ['space'])
 
-print("condition: the participant is in the ", randomization, " group.")
+print("condition: ", randomization)
 
 score = 0
 trials = 0
