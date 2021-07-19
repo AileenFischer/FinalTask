@@ -290,32 +290,6 @@ while trials <= 5:
 
     trials += 1
     print("trial: ", trials)
-
-    # win-stay, lose-shift
-#    if trials > 1:
-#        if 'k' in choice:
-#            if random_feedback.text == "correct!":
-#                if trials + 1 and 'k' in choice:
-#                    print("win-stay")
-#                else:
-#                    print("other")
-#            else:
-#                if trials + 1 and 'k' in choices:
-#                    print("other")
-#                else:
-#                    print("lose-shift")
-#       else:
-#            if random_feedback.text == "correct!":
-#                if trials + 1 and 'd' in choice:
-#                   print("win-stay")
-#                else:
-#                    print("other")
-#            else:
-#                if trials + 1 and 'd' in choice:
-#                    print("other")
-#                else:
-#                    print("lose-shift") 
-
                     
 # overall feedback is given
 
