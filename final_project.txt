@@ -1,0 +1,10 @@
+
+id	age	gender		condition	trial_number	stimulus	response_key and response_time		feedback
+12345	24	female		social_1
+						1		1		[['k', 1.3761131659848616]]		correct!
+						2		2		[['d', 2.856537001003744]]		correct!
+						3		1		[['d', 3.82076833199244]]		correct!
+						4		2		[['k', 2.7782267979928292]]		incorrect!
+						5		1		[['k', 2.582711038994603]]		correct!
+						6		2		[['d', 2.607088433986064]]		correct!
+
