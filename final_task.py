@@ -8,7 +8,7 @@ event.globalKeys.add(key='q', modifiers=['ctrl'], func=core.quit)
 # creating file for experiment
 data_out = open('final_project.txt', 'a', encoding='utf-8')
 data_out.write( '\t'.join(["id", "age", "gender", "condition", "trial_number", "stimulus", "response_key", "feedback"]) + "\n" )
-print("file was created")
+print("file was created.")
 
 # Participant information
 part_info = gui.Dlg(title = "Participant information")
