@@ -7,7 +7,7 @@ event.globalKeys.add(key='q', modifiers=['ctrl'], func=core.quit)
 
 # creating file for experiment
 data_out = open('final_project.txt', 'a', encoding='utf-8')
-data_out.write( '\t'.join( [ "id", "age", "gender", "condition", "trial_number", "stimulus", "response_key", "feedback" ] ) + "\n" )
+data_out.write( '\t'.join(["id", "age", "gender", "condition", "trial_number", "stimulus", "response_key", "feedback"]) + "\n" )
 
 print("file was created")
 
@@ -19,8 +19,10 @@ gender = part_info.addField("Gender: ", choices=["female", "male", "non-binary",
 ok_data = part_info.show()
 if part_info.OK:
     print(ok_data)
+    data_out.write(str(ok_data) + "\n")
 else:
     print("experiment was cancelled.")
+    data_out.write("experiment was cancelled.")
     quit()
 
 #define window and stimuli
@@ -203,7 +205,7 @@ else:
     event.waitKeys(keyList = ['space'])
 
 print("condition: ", randomization)
-data_out.write( '\t'.join( [ str(identification), str(age), str(gender), str(randomization) ] ) + '\n' )
+data_out.write( '\t'.join([str(randomization)]) + '\n' )
 
 instruction = psychopy.visual.TextStim(win,
                 text = "Please press 'd' for left and 'k' for right.",  
@@ -222,8 +224,8 @@ win.flip()
 event.waitKeys(keyList = ['space'])
 
 # trial feedback
-trial_correct = psychopy.visual.TextStim(win, text = "correct!", color = "black", height = 25)
-trial_incorrect = psychopy.visual.TextStim(win, text = "incorrect!", color = "black", height = 25)
+trial_correct = psychopy.visual.TextStim(win, text = "correct!", color = "black", height = 30)
+trial_incorrect = psychopy.visual.TextStim(win, text = "incorrect!", color = "black", height = 30)
 
 # trial stimuli presentation
 if randomization == "social_1" or randomization == "nonsocial_1":
@@ -392,9 +394,10 @@ while trials <= 5:
     trials += 1
     print("trial: ", trials)
 
-    data_out.write( '\t'.join( [ str(trials), str(stimulus), str(choice), str(random_feedback.text) ] ) + '\n' )
+    data_out.write( '\t'.join([str(trials), str(stimulus), str(choice), str(random_feedback.text)]) + '\n' )
 
 # overall feedback is given
+print("overall feedback is given.")
 
 if score >= 50:
       gold_prize = psychopy.visual.TextStim(win,
