@@ -2,37 +2,28 @@ import random
 import psychopy.visual
 from psychopy.core import wait, Clock
 from psychopy import core, event
-from psychopy.gui import DlgFromDict
+from psychopy import gui
 event.globalKeys.add(key='q', modifiers=['ctrl'], func=core.quit)
 
 # creating file for experiment
 data_out = open('final_project.txt', 'a', encoding='utf-8')
-data_out.write( '\t'.join( [ "participant_id", "participant_age", "participant_gender", "condition", "trial_number", "stimulus", "response_key", "feedback" ] ) + "\n" )
-data_out.write( '\t'.join( [ part_id, str(part_age), str(part_gender), str(condition), str(trials+1), str(stimulus), str(choice), str(feedback) ] ) + '\n' )
+data_out.write( '\t'.join( [ "id", "age", "gender", "condition", "trial_number", "stimulus", "response_key", "feedback" ] ) + "\n" )
+
+print("file was created")
 
 # Participant information
-part_info = {'ID: ': ' ', 'Age: ': ' ', 'Gender: ': ['female', 'male', 'non-binary', 'other']}
-part_instr = DlgFromDict(dictionary = part_info, title = "Participant information",
-                                            order = ['ID: ', 'Age: ', 'Gender: '], tip = {'ID: ': 'This informatin is to be filled out by the experimenter', 
-                                            'Age: ' : 'Please enter your age in years', 'Gender: ' : 'Please select your gender'})
-if part_instr.OK:
-    # prevent missing input in ID field
-    while not part_info['ID: ']:
-        part_instr.show()
-        if part_instr.OK == False:
-            quit()
-    # prevent missing input in age field
-    while not part_info['Age: ']:
-        part_instr.OK == False:
-            quit()
-    # define participant information
-    part_id == part_info['ID: ']
-    part_age == part_info['Age :']
-    part_gender == part_info['Gender: ']
-
+part_info = gui.Dlg(title = "Participant information")
+identification = part_info.addField("ID: ")
+age = part_info.addField("Age: ")
+gender = part_info.addField("Gender: ", choices=["female", "male", "non-binary", "other"])
+ok_data = part_info.show()
+if part_info.OK:
+    print(ok_data)
 else:
+    print("experiment was cancelled.")
     quit()
 
+#define window and stimuli
 win = psychopy.visual.Window(
             size = [1000, 800],
             units = "pix",
@@ -212,16 +203,126 @@ else:
     event.waitKeys(keyList = ['space'])
 
 print("condition: ", randomization)
-
-score = 0
-trials = 0
-timer = Clock()
+data_out.write( '\t'.join( [ str(identification), str(age), str(gender), str(randomization) ] ) + '\n' )
 
 instruction = psychopy.visual.TextStim(win,
                 text = "Please press 'd' for left and 'k' for right.",  
                 color = "black", 
                 height = 25)
 instruction.pos = [0, -160]
+
+# trial run
+print("the trial has started.")
+trial_instruction = psychopy.visual.TextStim(win, text = "Before the experiment starts, you get a chance to practice. \n\n"
+                                "This practice rounds consist of 3 trials, where you press 'd' for the left stimulus and 'k' for the right stimulus. \n\n"
+                                "If you have understood the instruction, please press 'space' to continue to start the trial rounds.",
+                                color = "black")
+trial_instruction.draw()
+win.flip()
+event.waitKeys(keyList = ['space'])
+
+# trial feedback
+trial_correct = psychopy.visual.TextStim(win, text = "correct!", color = "black", height = 25)
+trial_incorrect = psychopy.visual.TextStim(win, text = "incorrect!", color = "black", height = 25)
+
+# trial stimuli presentation
+if randomization == "social_1" or randomization == "nonsocial_1":
+    blue_rect.draw()
+    green_red_rect.draw()
+    instruction.draw()
+    win.flip()
+    choice = event.waitKeys(keyList = ['d', 'k'])
+    if 'k' in choice:
+        trial_correct.draw()
+        win.flip()
+        wait(2)
+    else:
+        trial_incorrect.draw()
+        win.flip()
+        wait(2)
+    blue_red_rect.draw()
+    green_rect.draw()
+    instruction.draw()
+    win.flip()
+    choice = event.waitKeys(keyList = ['d', 'k'])
+    if 'k' in choice:
+        trial_correct.draw()
+        win.flip()
+        wait(2)
+    else:
+        trial_incorrect.draw()
+        win.flip()
+        wait(2)
+    blue_red_rect.draw()
+    green_rect.draw()
+    instruction.draw()
+    win.flip()
+    choice = event.waitKeys(keyList = ['d', 'k'])
+    if 'k' in choice:
+        trial_incorrect.draw()
+        win.flip()
+        wait(2)
+    else:
+        trial_correct.draw()
+        win.flip()
+        wait(2)
+else:
+    orange_tri.draw()
+    purple_green_tri.draw()
+    instruction.draw()
+    win.flip()
+    choice = event.waitKeys(keyList = ['d', 'k'])
+    if 'k' in choice:
+        trial_correct.draw()
+        win.flip()
+        wait(2)
+    else:
+        trial_incorrect.draw()
+        win.flip()
+        wait(2)
+    orange_green_tri.draw()
+    purple_tri.draw()
+    instruction.draw()
+    win.flip()
+    choice = event.waitKeys(keyList = ['d', 'k'])
+    if 'k' in choice:
+        trial_correct.draw()
+        win.flip()
+        wait(2)
+    else:
+        trial_incorrect.draw()
+        win.flip()
+        wait(2)
+    orange_green_tri.draw()
+    purple_tri.draw()
+    instruction.draw()
+    win.flip()
+    choice = event.waitKeys(keyList = ['d', 'k'])
+    if 'k' in choice:
+        trial_incorrect.draw()
+        win.flip()
+        wait(2)
+    else:
+        trial_correct.draw()
+        win.flip()
+        wait(2)
+
+end_trial = psychopy.visual.TextStim(win, text = "This concludes the trial rounds. By pressing 'space' you continue to the real experiment.", color = "black", height = 25)
+end_trial.draw()
+win.flip()
+event.waitKeys(keyList = ['space'])
+print("the trial has ended.")
+
+# experiment
+print("the experiment has started.")
+score = 0
+trials = 0
+timer = Clock()
+
+start_experiment =psychopy.visual.TextStim(win, text = "The experiment starts in 3 seconds.", color = "black", height = 25)
+start_experiment.draw()
+win.flip()
+wait(3)
 
 while trials <= 5:
     # randomization of stimuli
@@ -290,7 +391,9 @@ while trials <= 5:
 
     trials += 1
     print("trial: ", trials)
-                    
+
+    data_out.write( '\t'.join( [ str(trials), str(stimulus), str(choice), str(random_feedback.text) ] ) + '\n' )
+
 # overall feedback is given
 
 if score >= 50:
@@ -326,6 +429,7 @@ end_screen = psychopy.visual.TextStim(win,
 end_screen.draw()
 win.flip()
 wait(5)
+print("experiment has ended.")
 
 win.close()
 core.quit()
